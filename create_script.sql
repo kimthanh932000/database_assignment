@@ -49,7 +49,7 @@ CREATE TABLE product
 	brand VARCHAR(100),
 	quantity SMALLINT NOT NULL DEFAULT 0,
 	is_available BIT NOT NULL DEFAULT 1,
-	CONSTRAINT fk_category  FOREIGN KEY (category_id) REFERENCES category(category_id)
+	CONSTRAINT fk_product_category  FOREIGN KEY (category_id) REFERENCES category(category_id)
 );
 GO
 
@@ -80,7 +80,7 @@ CREATE TABLE shopping_cart
 	total_price DECIMAL(10, 2) NOT NULL,
 	created_at DATETIME NOT NULL DEFAULT GETDATE(),
 	updated_at DATETIME NOT NULL DEFAULT GETDATE(),
-	CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+	CONSTRAINT fk_cart_custumer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
 GO
 
@@ -95,8 +95,8 @@ CREATE TABLE cart_item
 	product_id INT NOT NULL,
 	quantity SMALLINT NOT NULL,
 	unit_price DECIMAL(10, 2) NOT NULL,
-	CONSTRAINT fk_cart FOREIGN KEY (cart_id) REFERENCES shopping_cart(cart_id),
-	CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product(product_id)
+	CONSTRAINT fk_cart_item_cart FOREIGN KEY (cart_id) REFERENCES shopping_cart(cart_id),
+	CONSTRAINT fk_cart_item_product FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 GO
 
@@ -114,10 +114,10 @@ CREATE TABLE delivery_type
 GO
 
 
---Paymentype
+--PaymentType
 DROP TABLE IF EXISTS payment_type
 GO
-CREATE TABLE delivery_type
+CREATE TABLE payment_type
 (
 	[type_id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	title VARCHAR(50) NOT NULL,
@@ -128,9 +128,9 @@ GO
 
 
 --Order
-DROP TABLE IF EXISTS order
+DROP TABLE IF EXISTS [order]
 GO
-CREATE TABLE order
+CREATE TABLE [order]
 (
 	order_id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	customer_id INT NOT NULL,
@@ -141,9 +141,9 @@ CREATE TABLE order
 	payment_status VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
 	created_at DATETIME NOT NULL DEFAULT GETDATE(),
 	updated_at DATETIME NOT NULL DEFAULT GETDATE(),
-	CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-	CONSTRAINT fk_delivery_type FOREIGN KEY (delivery_type) REFERENCES delivery_type(type_id),
-	CONSTRAINT fk_payment_type FOREIGN KEY (payment_type) REFERENCES payment_type(type_id),
+	CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+	CONSTRAINT fk_order_delivery_type FOREIGN KEY (delivery_type) REFERENCES delivery_type(type_id),
+	CONSTRAINT fk_order_payment_type FOREIGN KEY (payment_type) REFERENCES payment_type(type_id),
 );
 GO
 
@@ -158,8 +158,8 @@ CREATE TABLE order_item
 	order_id INT NOT NULL,
 	quantity SMALLINT NOT NULL,
 	unit_price DECIMAL(10, 2) NOT NULL,
-	CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product(product_id),
-	CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
+	CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES product(product_id),
+	CONSTRAINT fk_order_item_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
 );
 GO
 
@@ -198,8 +198,8 @@ CREATE TABLE shipment
     pickup_code VARCHAR(20),
     pickup_location VARCHAR(50),
     scheduled_pickup_date DATETIME,
-    CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES [order](order_id),
-    CONSTRAINT fk_shipper FOREIGN KEY (shipper_id) REFERENCES shipper(shipper_id)
+    CONSTRAINT fk_shipment_order FOREIGN KEY (order_id) REFERENCES [order](order_id),
+    CONSTRAINT fk_shipment_shipper FOREIGN KEY (shipper_id) REFERENCES shipper(shipper_id)
 );
 GO
 --******Database Population*******
