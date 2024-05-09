@@ -15,7 +15,7 @@ IF DB_ID('ecommerce') IS NOT NULL
 	END
 GO
 
--- create new database called MovieTheatre
+-- create new database called ecommerce
 CREATE DATABASE ecommerce;
 GO
 
@@ -45,7 +45,7 @@ CREATE TABLE product
 	category_id INT NOT NULL,
 	title VARCHAR(150) NOT NULL,
 	[description] VARCHAR(MAX),
-	price DECIMAL(10, 2) NOT NULL,
+	price DECIMAL(10, 2) NOT NULL CHECK (price > 0),
 	brand VARCHAR(100),
 	quantity SMALLINT NOT NULL DEFAULT 0,
 	is_available BIT NOT NULL DEFAULT 1,
@@ -62,7 +62,7 @@ CREATE TABLE customer
 	customer_id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
-	email VARCHAR(320) NOT NULL,
+	email VARCHAR(320) NOT NULL UNIQUE CHECK (email LIKE '%@%'),
 	phone VARCHAR(15) NOT NULL,
 	[address] VARCHAR(MAX) NOT NULL
 );
@@ -114,19 +114,6 @@ CREATE TABLE delivery_type
 GO
 
 
---PaymentType
-DROP TABLE IF EXISTS payment_type
-GO
-CREATE TABLE payment_type
-(
-	[type_id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	title VARCHAR(50) NOT NULL,
-	[description] VARCHAR(MAX),
-	is_active BIT NOT NULL DEFAULT 1
-);
-GO
-
-
 --Order
 DROP TABLE IF EXISTS [order]
 GO
@@ -135,15 +122,13 @@ CREATE TABLE [order]
 	order_id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	customer_id INT NOT NULL,
 	delivery_type INT NOT NULL,
-	payment_type INT NOT NULL,
 	total_price DECIMAL(10, 2) NOT NULL,
-	order_status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+	order_status VARCHAR(20) NOT NULL CHECK (order_status IN ('Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Failed Delivery', 'Cancelled')),
 	payment_status VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
 	created_at DATETIME NOT NULL DEFAULT GETDATE(),
 	updated_at DATETIME NOT NULL DEFAULT GETDATE(),
 	CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-	CONSTRAINT fk_order_delivery_type FOREIGN KEY (delivery_type) REFERENCES delivery_type(type_id),
-	CONSTRAINT fk_order_payment_type FOREIGN KEY (payment_type) REFERENCES payment_type(type_id),
+	CONSTRAINT fk_order_delivery_type FOREIGN KEY (delivery_type) REFERENCES delivery_type(type_id)
 );
 GO
 
@@ -160,6 +145,22 @@ CREATE TABLE order_item
 	unit_price DECIMAL(10, 2) NOT NULL,
 	CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES product(product_id),
 	CONSTRAINT fk_order_item_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
+);
+GO
+
+
+--Payment
+DROP TABLE IF EXISTS payment
+GO
+CREATE TABLE payment
+(
+	payment_id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	order_id INT NOT NULL,
+	transaction_id VARCHAR(255) NOT NULL UNIQUE,
+	amount DECIMAL(10, 2) NOT NULL,
+	payment_status VARCHAR(20) NOT NULL,
+	payment_date DATETIME NOT NULL DEFAULT GETDATE(),
+	CONSTRAINT fk_payment_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
 );
 GO
 
@@ -189,10 +190,9 @@ CREATE TABLE shipment
     shipper_id INT,
     tracking_number VARCHAR(50),
     shipping_date DATETIME,
-    estimated_arrival DATETIME,
+    arrival_date DATETIME,
     shipping_cost DECIMAL(10, 2),
-    shipping_status VARCHAR(20),
-    contact_name VARCHAR(100)NOT NULL,
+    contact_name VARCHAR(100) NOT NULL,
     shipping_address VARCHAR(MAX),
     phone VARCHAR(15) NOT NULL,
     pickup_code VARCHAR(20),
