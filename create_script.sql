@@ -158,7 +158,7 @@ CREATE TABLE payment
 	order_id INT NOT NULL,
 	transaction_id VARCHAR(255) NOT NULL UNIQUE,
 	amount DECIMAL(10, 2) NOT NULL,
-	payment_status VARCHAR(20) NOT NULL,
+	payment_status VARCHAR(20) NOT NULL CHECK (payment_status IN ('Paid', 'Unpaid', 'Failed')),
 	payment_date DATETIME NOT NULL DEFAULT GETDATE(),
 	CONSTRAINT fk_payment_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
 );
@@ -263,7 +263,7 @@ VALUES (1, 2, 150.00, GETDATE(), GETDATE()),
 INSERT INTO cart_item 
 VALUES (1, 1, 1, 799.00),   -- iPhone 13 in cart 1
 	   (1, 2, 1, 699.00),   -- Samsung Galaxy S21 in cart 1
-	   (1, 16, 1, 999.00),  -- another high-cost item in cart 1
+	   (1, 10, 1, 1200.00), -- Samsung Smart Fridge in cart 1
 	   (2, 3, 1, 999.00),   -- Dell XPS 13 in cart 2
 	   (2, 4, 1, 1099.00),  -- MacBook Air in cart 2
 	   (2, 5, 2, 799.00),   -- 2 iPad Pros in cart 2
@@ -273,8 +273,8 @@ VALUES (1, 1, 1, 799.00),   -- iPhone 13 in cart 1
 	   (5, 8, 1, 499.00),   -- PlayStation 5 in cart 5
 	   (5, 9, 2, 299.00),   -- 2 Bose QuietComfort in cart 5
 	   (6, 10, 1, 449.99),  -- Nikon D3500 in cart 6
-	   (6, 11, 1, 799.99),  -- DJI Mavic Air 2 in cart 6
-	   (7, 12, 1, 1200.00), -- Samsung Smart Fridge in cart 7
+	   (6, 4, 1, 1099.00),  -- MacBook Air in cart 6
+	   (7, 1, 1, 799.00),   -- iPhone 13 in cart 7
 	   (8, 5, 2, 799.00),   -- 2 iPad Pros in cart 8
 	   (9, 1, 1, 799.00),   -- iPhone 13 in in cart 9
 	   (10, 4, 1, 1099.00); -- MacBook Air in cart 10
@@ -296,3 +296,55 @@ VALUES (1, 1, 250.00, 'Processing', 'Unpaid', GETDATE(), GETDATE()),
 	   (8, 1, 120.00, 'Pending', 'Unpaid', GETDATE(), GETDATE()),
 	   (9, 2, 600.00, 'Delivered', 'Paid', GETDATE(), GETDATE()),
 	   (10, 1, 350.00, 'Out for Delivery', 'Paid', GETDATE(), GETDATE());
+
+
+INSERT INTO order_item (product_id, order_id, quantity, unit_price) 
+VALUES (1, 1, 2, 799.00),   -- 2 units of product ID 1 for order ID 1
+	   (2, 1, 1, 699.00),   -- 1 unit of product ID 2 for order ID 1
+	   (3, 2, 3, 999.00),   -- 3 units of product ID 3 for order ID 2
+	   (4, 2, 1, 1099.00),  -- 1 unit of product ID 4 for order ID 2
+	   (5, 3, 1, 799.00),   -- 1 unit of product ID 5 for order ID 3
+	   (6, 4, 1, 1500.00),  -- 1 unit of product ID 6 for order ID 4
+	   (7, 5, 2, 399.00),   -- 2 units of product ID 7 for order ID 5
+	   (8, 6, 1, 499.00),   -- 1 unit of product ID 8 for order ID 6
+	   (9, 7, 2, 299.00),   -- 2 units of product ID 9 for order ID 7
+	   (10, 8, 1, 449.99);  -- 1 unit of product ID 10 for order ID 8
+
+
+INSERT INTO payment (order_id, transaction_id, amount, payment_status, payment_date) 
+VALUES (1, '6ee6c3f95c2f527de1b1f8d33d2515f1', 250.00, 'Paid', GETDATE()),
+	  (2, '16ec0e8ca8d8beb2ed27d726ecdf5dc2', 150.00, 'Paid', GETDATE()),
+	  (3, '2c3d76b06bed7b527fcd02f6800c262e', 450.00, 'Unpaid', GETDATE()),
+	  (4, '34c3fbb726efa01e9b8b9b0cb16df33e', 125.00, 'Paid', GETDATE()),
+	  (5, 'e9800998ecf8427e21d0d767cff771d1', 300.00, 'Paid', GETDATE()),
+	  (6, '2f1ed4672ba948e93f104c72c9dab292', 200.00, 'Paid', GETDATE()),
+	  (7, 'f5a3f9d00f1d6dd4e47bde1b2c7f3d0f', 500.00, 'Paid', GETDATE()),
+	  (8, 'bc9189406be84ec297464a514221406d', 120.00, 'Unpaid', GETDATE()),
+	  (9, '9e107d9d372bb6826bd81d3542a419d6', 600.00, 'Paid', GETDATE()),
+	  (10, '4e07408562bedb8b60ce05c1decfe3ad', 350.00, 'Failed', GETDATE());
+
+
+INSERT INTO shipper (first_name, last_name, phone, [address], is_available) 
+VALUES ('John', 'Doe', '555-0101', '123 Elm St, Springfield', 1),
+	   ('Jane', 'Smith', '555-0102', '456 Pine St, Centerville', 1),
+	   ('Michael', 'Brown', '555-0103', '789 Maple St, Smalltown', 1),
+	   ('Emily', 'Jones', '555-0104', '321 Oak St, Lakeview', 0),
+	   ('Chris', 'Davis', '555-0105', '654 Spruce St, Riverview', 1),
+	   ('Jessica', 'Taylor', '555-0106', '987 Cedar St, Hilltown', 1),
+	   ('David', 'Wilson', '555-0107', '213 Ash St, Seaview', 1),
+	   ('Laura', 'Moore', '555-0108', '546 Birch St, Plainfield', 1),
+	   ('James', 'Anderson', '555-0109', '128 Palm St, Sunnyside', 0),
+	   ('Linda', 'Thomas', '555-0110', '235 Willow St, Eastwood', 1);
+
+
+INSERT INTO shipment (order_id, shipper_id, tracking_number, shipping_date, arrival_date, shipping_cost, contact_name, shipping_address, phone, pickup_code, pickup_location, scheduled_pickup_date) 
+VALUES (1, 1, 'TRK123456789', GETDATE(), DATEADD(day, 3, GETDATE()), 15.00, 'John Doe', '123 Elm St, Springfield', '555-0101', NULL, NULL, NULL),
+	   (2, 2, 'TRK987654321', GETDATE(), DATEADD(day, 2, GETDATE()), 20.00, 'Jane Smith', '456 Pine St, Centerville', '555-0102', NULL, NULL, NULL),
+	   (3, 3, 'TRK192837465', GETDATE(), DATEADD(day, 1, GETDATE()), 25.00, 'Michael Brown', '789 Maple St, Smalltown', '555-0103', NULL, NULL, NULL),
+	   (4, 1, 'TRK564738291', GETDATE(), DATEADD(day, 5, GETDATE()), 30.00, 'Emily Jones', '321 Oak St, Lakeview', '555-0104', NULL, NULL, NULL),
+	   (5, 2, 'TRK102938475', GETDATE(), DATEADD(day, 3, GETDATE()), 12.00, 'Chris Davis', '654 Spruce St, Riverview', '555-0105', NULL, NULL, NULL),
+	   (6, 3, 'TRK675849302', GETDATE(), DATEADD(day, 7, GETDATE()), 45.00, 'Jessica Taylor', '987 Cedar St, Hilltown', '555-0106', NULL, NULL, NULL),
+	   (7, 1, 'TRK948576123', GETDATE(), DATEADD(day, 4, GETDATE()), 18.00, 'David Wilson', '213 Ash St, Seaview', '555-0107', NULL, NULL, NULL),
+	   (8, 2, 'TRK847362514', GETDATE(), DATEADD(day, 2, GETDATE()), 22.00, 'Laura Moore', '546 Birch St, Plainfield', '555-0108', NULL, NULL, NULL),
+	   (9, NULL, NULL, NULL, NULL, 0.00, 'James Anderson', NULL, '555-0109', 'PK532643', 'Warehouse 4', DATEADD(day, 1, GETDATE())),
+	   (10, NULL, NULL, NULL, NULL, 0.00, 'Linda Thomas', NULL, '555-0110', 'PK123456', 'Warehouse 5', DATEADD(day, 1, GETDATE()));
