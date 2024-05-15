@@ -94,7 +94,7 @@ CREATE TABLE cart_item
 	cart_id INT NOT NULL,
 	product_id INT NOT NULL,
 	quantity SMALLINT NOT NULL,
-	unit_price DECIMAL(10, 2) NOT NULL,
+	sub_total DECIMAL(10, 2) NOT NULL,
 	CONSTRAINT fk_cart_item_cart FOREIGN KEY (cart_id) REFERENCES shopping_cart(cart_id),
 	CONSTRAINT fk_cart_item_product FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
@@ -248,16 +248,16 @@ VALUES ('John', 'Doe', 'john.doe@example.com', '123-456-7890', '123 Elm Street, 
 
 
 INSERT INTO shopping_cart
-VALUES (1, 2, 150.00, GETDATE(), GETDATE()),
-	   (2, 5, 450.00, GETDATE(), GETDATE()),
-	   (3, 3, 220.00, GETDATE(), GETDATE()),
-	   (4, 1, 799.00, GETDATE(), GETDATE()),
-	   (5, 4, 360.00, GETDATE(), GETDATE()),
-	   (6, 1, 999.00, GETDATE(), GETDATE()),
-	   (7, 7, 525.00, GETDATE(), GETDATE()),
-	   (8, 2, 198.00, GETDATE(), GETDATE()),
-	   (9, 3, 289.00, GETDATE(), GETDATE()),
-	   (10, 6, 1200.00, GETDATE(), GETDATE());
+VALUES (1, 3, 2698.00, GETDATE(), GETDATE()),
+	   (2, 4, 3696.00, GETDATE(), GETDATE()),
+	   (3, 2, 2299.00, GETDATE(), GETDATE()),
+	   (4, 1, 399.00, GETDATE(), GETDATE()),
+	   (5, 3, 1097.00, GETDATE(), GETDATE()),
+	   (6, 2, 1548.00, GETDATE(), GETDATE()),
+	   (7, 1, 799.00, GETDATE(), GETDATE()),
+	   (8, 2, 1598.00, GETDATE(), GETDATE()),
+	   (9, 1, 799.00, GETDATE(), GETDATE()),
+	   (10, 1, 1099.00, GETDATE(), GETDATE());
 
 
 INSERT INTO cart_item 
@@ -266,16 +266,16 @@ VALUES (1, 1, 1, 799.00),   -- iPhone 13 in cart 1
 	   (1, 10, 1, 1200.00), -- Samsung Smart Fridge in cart 1
 	   (2, 3, 1, 999.00),   -- Dell XPS 13 in cart 2
 	   (2, 4, 1, 1099.00),  -- MacBook Air in cart 2
-	   (2, 5, 2, 799.00),   -- 2 iPad Pros in cart 2
+	   (2, 5, 2, 1598.00),   -- 2 iPad Pros in cart 2
 	   (3, 6, 1, 1500.00),  -- Alienware Aurora in cart 3
 	   (3, 5, 1, 799.00),   -- iPad Pro in cart 3
        (4, 7, 1, 399.00),   -- Apple Watch Series 6 in cart 4
 	   (5, 8, 1, 499.00),   -- PlayStation 5 in cart 5
-	   (5, 9, 2, 299.00),   -- 2 Bose QuietComfort in cart 5
+	   (5, 9, 2, 598.00),   -- 2 Bose QuietComfort in cart 5
 	   (6, 10, 1, 449.99),  -- Nikon D3500 in cart 6
 	   (6, 4, 1, 1099.00),  -- MacBook Air in cart 6
 	   (7, 1, 1, 799.00),   -- iPhone 13 in cart 7
-	   (8, 5, 2, 799.00),   -- 2 iPad Pros in cart 8
+	   (8, 5, 2, 1598.00),   -- 2 iPad Pros in cart 8
 	   (9, 1, 1, 799.00),   -- iPhone 13 in in cart 9
 	   (10, 4, 1, 1099.00); -- MacBook Air in cart 10
 
