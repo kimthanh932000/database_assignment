@@ -124,7 +124,6 @@ CREATE TABLE [order]
 	delivery_type INT NOT NULL,
 	total_price DECIMAL(10, 2) NOT NULL,
 	order_status VARCHAR(20) NOT NULL CHECK (order_status IN ('Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Failed Delivery', 'Cancelled')),
-	payment_status VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
 	created_at DATETIME NOT NULL DEFAULT GETDATE(),
 	updated_at DATETIME NOT NULL DEFAULT GETDATE(),
 	CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
@@ -142,7 +141,7 @@ CREATE TABLE order_item
 	product_id INT NOT NULL,
 	order_id INT NOT NULL,
 	quantity SMALLINT NOT NULL,
-	unit_price DECIMAL(10, 2) NOT NULL,
+	sub_total DECIMAL(10, 2) NOT NULL,
 	CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES product(product_id),
 	CONSTRAINT fk_order_item_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
 );
@@ -158,7 +157,7 @@ CREATE TABLE payment
 	order_id INT NOT NULL,
 	transaction_id VARCHAR(255) NOT NULL UNIQUE,
 	amount DECIMAL(10, 2) NOT NULL,
-	payment_status VARCHAR(20) NOT NULL CHECK (payment_status IN ('Paid', 'Unpaid', 'Failed')),
+	payment_status VARCHAR(20) NOT NULL CHECK (payment_status IN ('Successfull', 'Failed')),
 	payment_date DATETIME NOT NULL DEFAULT GETDATE(),
 	CONSTRAINT fk_payment_order FOREIGN KEY (order_id) REFERENCES [order](order_id)
 );
@@ -286,42 +285,46 @@ VALUES ('Delivery', 'Delivers in 3-5 business days.', 1),
 
 
 INSERT INTO [order]
-VALUES (1, 1, 250.00, 'Processing', 'Unpaid', GETDATE(), GETDATE()),
-	   (2, 2, 150.00, 'Pending', 'Unpaid', GETDATE(), GETDATE()),
-	   (3, 1, 450.00, 'Out for Delivery', 'Paid', GETDATE(), GETDATE()),
-	   (4, 1, 125.00, 'Delivered', 'Paid', GETDATE(), GETDATE()),
-	   (5, 2, 300.00, 'Failed Delivery', 'Paid', GETDATE(), GETDATE()),
-	   (6, 1, 200.00, 'Cancelled', 'Unpaid', GETDATE(), GETDATE()),
-	   (7, 1, 500.00, 'Processing', 'Paid', GETDATE(), GETDATE()),
-	   (8, 1, 120.00, 'Pending', 'Unpaid', GETDATE(), GETDATE()),
-	   (9, 2, 600.00, 'Delivered', 'Paid', GETDATE(), GETDATE()),
-	   (10, 1, 350.00, 'Out for Delivery', 'Paid', GETDATE(), GETDATE());
+VALUES (1, 1, 1598.00, 'Processing', '2024-05-1 22:06:20.160', GETDATE()),
+	   (2, 2, 699.00, 'Pending', '2024-05-2 22:06:20.160', GETDATE()),
+	   (3, 1, 2997.00, 'Out for Delivery', '2024-05-3 22:06:20.160', GETDATE()),
+	   (4, 1, 1099.00, 'Delivered', '2024-05-4 22:06:20.160', GETDATE()),
+	   (5, 2, 799.00, 'Failed Delivery', '2024-05-5 22:06:20.160', GETDATE()),
+	   (6, 1, 1500.00, 'Cancelled', '2024-05-6 22:06:20.160', GETDATE()),
+	   (7, 1, 798.00, 'Processing', '2024-05-7 22:06:20.160', GETDATE()),
+	   (8, 1, 499.00, 'Pending', GETDATE(), GETDATE()),
+	   (9, 2, 598.00, 'Delivered', GETDATE(), GETDATE()),
+	   (10, 1, 449.00, 'Out for Delivery', GETDATE(), GETDATE()),
+	   (1, 1, 1398.00, 'Delivered', GETDATE(), GETDATE());
 
 
-INSERT INTO order_item (product_id, order_id, quantity, unit_price) 
-VALUES (1, 1, 2, 799.00),   -- 2 units of product ID 1 for order ID 1
+INSERT INTO order_item (product_id, order_id, quantity, sub_total) 
+VALUES (1, 1, 2, 1598.00),   -- 2 units of product ID 1 for order ID 1
 	   (2, 1, 1, 699.00),   -- 1 unit of product ID 2 for order ID 1
-	   (3, 2, 3, 999.00),   -- 3 units of product ID 3 for order ID 2
+	   (3, 2, 3, 2997.00),   -- 3 units of product ID 3 for order ID 2
 	   (4, 2, 1, 1099.00),  -- 1 unit of product ID 4 for order ID 2
 	   (5, 3, 1, 799.00),   -- 1 unit of product ID 5 for order ID 3
 	   (6, 4, 1, 1500.00),  -- 1 unit of product ID 6 for order ID 4
-	   (7, 5, 2, 399.00),   -- 2 units of product ID 7 for order ID 5
+	   (7, 5, 2, 798.00),   -- 2 units of product ID 7 for order ID 5
 	   (8, 6, 1, 499.00),   -- 1 unit of product ID 8 for order ID 6
-	   (9, 7, 2, 299.00),   -- 2 units of product ID 9 for order ID 7
-	   (10, 8, 1, 449.99);  -- 1 unit of product ID 10 for order ID 8
+	   (9, 7, 2, 598.00),   -- 2 units of product ID 9 for order ID 7
+	   (10, 8, 1, 449.99),  -- 1 unit of product ID 10 for order ID 8
+	   (3, 11, 2, 1398.00);   -- 2 units of product ID 1 for order ID 1
+
 
 
 INSERT INTO payment (order_id, transaction_id, amount, payment_status, payment_date) 
-VALUES (1, '6ee6c3f95c2f527de1b1f8d33d2515f1', 250.00, 'Paid', GETDATE()),
-	  (2, '16ec0e8ca8d8beb2ed27d726ecdf5dc2', 150.00, 'Paid', GETDATE()),
-	  (3, '2c3d76b06bed7b527fcd02f6800c262e', 450.00, 'Unpaid', GETDATE()),
-	  (4, '34c3fbb726efa01e9b8b9b0cb16df33e', 125.00, 'Paid', GETDATE()),
-	  (5, 'e9800998ecf8427e21d0d767cff771d1', 300.00, 'Paid', GETDATE()),
-	  (6, '2f1ed4672ba948e93f104c72c9dab292', 200.00, 'Paid', GETDATE()),
-	  (7, 'f5a3f9d00f1d6dd4e47bde1b2c7f3d0f', 500.00, 'Paid', GETDATE()),
-	  (8, 'bc9189406be84ec297464a514221406d', 120.00, 'Unpaid', GETDATE()),
-	  (9, '9e107d9d372bb6826bd81d3542a419d6', 600.00, 'Paid', GETDATE()),
-	  (10, '4e07408562bedb8b60ce05c1decfe3ad', 350.00, 'Failed', GETDATE());
+VALUES (1, '6ee6c3f95c2f527de1b1f8d33d2515f1', 1598.00, 'Failed', GETDATE()),
+	  (2, '16ec0e8ca8d8beb2ed27d726ecdf5dc2', 699.00, 'Failed', GETDATE()),
+	  (3, '2c3d76b06bed7b527fcd02f6800c262e', 2997.00, 'Successfull', GETDATE()),
+	  (4, '34c3fbb726efa01e9b8b9b0cb16df33e', 1099.00, 'Successfull', GETDATE()),
+	  (5, 'e9800998ecf8427e21d0d767cff771d1', 799.00, 'Successfull', GETDATE()),
+	  (6, '2f1ed4672ba948e93f104c72c9dab292', 1500.00, 'Failed', GETDATE()),
+	  (7, 'f5a3f9d00f1d6dd4e47bde1b2c7f3d0f', 798.00, 'Successfull', GETDATE()),
+	  (8, 'bc9189406be84ec297464a514221406d', 499.00, 'Failed', GETDATE()),
+	  (9, '9e107d9d372bb6826bd81d3542a419d6', 598.00, 'Successfull', GETDATE()),
+	  (10, '4e07408562bedb8b60ce05c1decfe3ad', 449.00, 'Failed', GETDATE()),
+	  (11, '52sa408562hd3b8b60ce05c1de3ss2ad', 1398.00, 'Failed', GETDATE());
 
 
 INSERT INTO shipper (first_name, last_name, phone, [address], is_available) 
