@@ -6,7 +6,7 @@ SELECT  dbo.product.title,
         dbo.order_item.product_id, 
         dbo.order_item.order_id, 
         dbo.order_item.quantity,
-        dbo.order_item.unit_price
+        dbo.order_item.sub_total
 FROM dbo.order_item
 INNER JOIN dbo.product ON dbo.order_item.product_id = dbo.product.product_id
 WHERE brand = 'Apple'
@@ -17,7 +17,7 @@ SELECT  dbo.cart_item.cart_id,
         dbo.cart_item.item_id,
         dbo.cart_item.product_id,
         dbo.cart_item.quantity,
-        dbo.cart_item.unit_price,
+        dbo.cart_item.sub_total,
         dbo.shopping_cart.created_at,
         dbo.shopping_cart.updated_at,
         dbo.shopping_cart.customer_id
@@ -30,7 +30,6 @@ ORDER BY customer_id;
 SELECT  dbo.[order].customer_id,
         dbo.[order].order_id,
         dbo.[order].order_status,
-        dbo.[order].payment_status,
         dbo.[order].total_price,
         dbo.[order].delivery_type,
         dbo.[order].created_at,
@@ -39,7 +38,7 @@ SELECT  dbo.[order].customer_id,
         dbo.payment.payment_date
 FROM dbo.[order] 
 INNER JOIN dbo.payment ON dbo.[order].order_id = dbo.payment.order_id
-WHERE dbo.[order].payment_status = 'Unpaid'
+WHERE dbo.[order].order_status = 'Processing'
 ORDER BY customer_id;
 
 -- Query 6 [Medium] (A.Dung)
