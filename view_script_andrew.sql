@@ -1,18 +1,26 @@
 -- View 1 (A.Dung)
--- db.Customer && db.Order
+-- db.Pruduct && db.Category
 USE ecommerce
 GO
 
-DROP VIEW IF EXISTS order_list
+DROP VIEW IF EXISTS product_list
 GO
 
-CREATE VIEW order_list AS
-SELECT  dbo.customer.customer_id, 
-        dbo.customer.first_name, 
-        dbo.customer.last_name, 
-        dbo.customer.email, 
-        dbo.customer.phone, 
-        dbo.[order].total_price,
-        dbo.[order].updated_at
-FROM dbo.customer Inner JOIN dbo.[order] ON dbo.customer.customer_id = dbo.[order].customer_id;
+CREATE VIEW product_list AS
+SELECT  dbo.product.product_id,
+        dbo.product.brand,
+        dbo.product.title AS Product_name,
+        dbo.product.[description] AS product_description,
+        dbo.product.price,
+        dbo.product.category_id,
+        dbo.product.quantity,
+        CASE 
+                WHEN dbo.product.is_available = '1'
+                THEN 'In stock'
+                        ELSE 'Out of Stock'
+        END AS [status],
+        dbo.category.title AS category_name,
+        dbo.category.[description] AS category_description
+FROM dbo.product JOIN dbo.category ON dbo.product.category_id = dbo.category.category_id;
+
 GO

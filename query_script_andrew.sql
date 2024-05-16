@@ -6,28 +6,30 @@ SELECT  dbo.product.title,
         dbo.order_item.product_id, 
         dbo.order_item.order_id, 
         dbo.order_item.quantity,
-        dbo.order_item.unit_price
+        dbo.order_item.sub_total
 FROM dbo.order_item
-INNER JOIN dbo.product ON dbo.order_item.product_id = dbo.product.product_id;
+INNER JOIN dbo.product ON dbo.order_item.product_id = dbo.product.product_id
+WHERE brand = 'Apple'
+ORDER BY title;
 
 -- Query 2 [Low] (A.Dung)
 SELECT  dbo.cart_item.cart_id,
         dbo.cart_item.item_id,
         dbo.cart_item.product_id,
         dbo.cart_item.quantity,
-        dbo.cart_item.unit_price,
+        dbo.cart_item.sub_total,
         dbo.shopping_cart.created_at,
         dbo.shopping_cart.updated_at,
         dbo.shopping_cart.customer_id
 FROM dbo.shopping_cart
 INNER JOIN dbo.cart_item ON dbo.shopping_cart.cart_id = dbo.cart_item.cart_id
 WHERE product_id = 1
+ORDER BY customer_id;
 
 -- Query 3 [Low] (A.Dung)
 SELECT  dbo.[order].customer_id,
         dbo.[order].order_id,
         dbo.[order].order_status,
-        dbo.[order].payment_status,
         dbo.[order].total_price,
         dbo.[order].delivery_type,
         dbo.[order].created_at,
@@ -36,6 +38,8 @@ SELECT  dbo.[order].customer_id,
         dbo.payment.payment_date
 FROM dbo.[order] 
 INNER JOIN dbo.payment ON dbo.[order].order_id = dbo.payment.order_id
+WHERE dbo.[order].order_status = 'Processing'
+ORDER BY customer_id;
 
 -- Query 6 [Medium] (A.Dung)
 
