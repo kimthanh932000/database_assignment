@@ -5,18 +5,18 @@ USE ecommerce;
 -- Query 3 [Low] (A.Dung)
 
 
--- Query 4  Customer's Orders Count (Vi)
--- SELECT customer ID, full name (by concatenating their first name and last name), email and total orders of each customer
--- Order the results by order count, in descending order
-
-SELECT		dbo.customer.customer_id,
-			dbo.customer.first_name +  ' ' + dbo.customer.last_name AS full_name,
-			COUNT(dbo.[order].order_id) AS total_orders
-FROM		dbo.customer INNER JOIN 
-				dbo.[order] ON dbo.customer.customer_id = dbo.[order].customer_id
-GROUP BY	dbo.customer.customer_id, dbo.customer.first_name +  ' ' + dbo.customer.last_name
-ORDER BY	total_orders DESC;
-
+-- Query 4  Total Shipping Cost and Average Shipping Time
+-- SELECT delivery method, total shipping cost and average shipping time (in days)
+-- WHERE:
+--		delivery method is of paid service
+SELECT		dbo.delivery_type.title AS delivery_method,
+			SUM(dbo.shipment.shipping_cost) AS total_shipping_cost,
+			AVG(DATEDIFF(day, dbo.shipment.shipping_date, dbo.shipment.arrival_date)) AS average_shipping_time
+FROM		dbo.shipment INNER JOIN 
+				dbo.[order] ON dbo.[order].order_id = dbo.shipment.order_id INNER JOIN
+				dbo.delivery_type ON dbo.[order].delivery_type = dbo.delivery_type.[type_id]
+WHERE		dbo.delivery_type.title = 'Delivery'
+GROUP BY	dbo.delivery_type.title;
 
 
 -- Query 5 Recent Orders (Vi)
@@ -32,6 +32,7 @@ FROM		dbo.[order] INNER JOIN
 				dbo.payment ON dbo.[order].order_id = dbo.payment.order_id
 WHERE		dbo.[order].created_at >= DATEADD(day, -30, GETDATE())
 ORDER BY	dbo.[order].created_at DESC;
+
 
 
 -- Query 6 [Medium] (A.Dung)
