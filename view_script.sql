@@ -12,7 +12,7 @@ SELECT  dbo.product.product_id,
         dbo.product.brand,
         dbo.product.title AS product_name,
         dbo.product.[description] AS product_description,
-        dbo.product.price,
+        dbo.product.price AS unit_price,
         dbo.product.category_id,
         dbo.product.quantity,
         CASE 
@@ -33,19 +33,15 @@ GO
 --		The cart item quantity and subtotal.
 --		The product ID and product name.
 
-DROP VIEW IF EXISTS v_customer_cart
+DROP VIEW IF EXISTS v_order_shipment
 GO
-CREATE VIEW v_customer_cart AS
-SELECT	dbo.customer.customer_id,
-		CONCAT(dbo.customer.first_name, ' ', dbo.customer.last_name) AS full_name,
-		dbo.customer.email,
-		dbo.product.title as product_name,
-		dbo.product.product_id,
-		dbo.shopping_cart.cart_id,
-		dbo.cart_item.quantity,
-		dbo.cart_item.sub_total
-FROM	dbo.customer INNER JOIN 
-			dbo.shopping_cart ON dbo.customer.customer_id = dbo.shopping_cart.customer_id INNER JOIN
-			dbo.cart_item ON dbo.cart_item.cart_id = dbo.shopping_cart.cart_id INNER JOIN
-			dbo.product ON dbo.product.product_id = dbo.cart_item.product_id;
+CREATE VIEW v_order_shipment AS
+SELECT	dbo.[order].order_id,
+		dbo.shipment.shipping_cost,
+		dbo.shipment.shipping_date,
+		dbo.shipment.arrival_date,
+		dbo.delivery_type.title AS delivery_method
+FROM	dbo.[order] INNER JOIN 
+			dbo.[shipment] ON dbo.[order].order_id = dbo.[shipment].order_id INNER JOIN
+			dbo.delivery_type ON dbo.[order].delivery_type = dbo.delivery_type.[type_id]
 GO

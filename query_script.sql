@@ -49,21 +49,18 @@ WHERE		(dbo.v_product_list.product_name LIKE '%samsung%') AND (dbo.v_product_lis
 ORDER BY	unit_price;
 
 
--- Query 4  Total Shipping Cost and Average Shipping Time
--- SELECT delivery method, total shipping cost and average shipping time (in days)
+-- Query 4  Low Stock Products
+-- SELECT name, quantity and status of all products
 -- WHERE:
---		delivery method is of paid service
--- Order the results by average shipping time, in descending order
-SELECT		dbo.delivery_type.title AS delivery_method,
-			SUM(dbo.shipment.shipping_cost) AS total_shipping_cost,
-			AVG(DATEDIFF(day, dbo.shipment.shipping_date, dbo.shipment.arrival_date)) AS average_shipping_days
-FROM		dbo.shipment INNER JOIN 
-				dbo.[order] ON dbo.[order].order_id = dbo.shipment.order_id INNER JOIN
-				dbo.delivery_type ON dbo.[order].delivery_type = dbo.delivery_type.[type_id]
-WHERE		dbo.delivery_type.title = 'Delivery'
-GROUP BY	dbo.delivery_type.title
-ORDER BY	average_shipping_days DESC;
+--		quantity is less than 10
+-- Order the results by quantity, in ascending order
 
+SELECT		dbo.v_product_list.product_name,
+			dbo.v_product_list.quantity,
+			dbo.v_product_list.[status]
+FROM		dbo.v_product_list
+WHERE		dbo.v_product_list.quantity < 10
+ORDER BY	dbo.v_product_list.quantity;
 
 
 -- Query 5 High-Value Customers
@@ -133,7 +130,7 @@ SELECT		dbo.v_product_list.category_name,
 				END) AS total_quantity_in_stock,
 			SUM(CASE 
 					WHEN dbo.v_product_list.[status] = 'In stock' 
-						THEN dbo.v_product_list.price * dbo.v_product_list.quantity 
+						THEN dbo.v_product_list.unit_price * dbo.v_product_list.quantity 
 						ELSE 0 
 				END) AS total_value_in_stock
 FROM		dbo.v_product_list
@@ -142,29 +139,16 @@ ORDER BY	total_value_in_stock DESC;
 
 
 
--- Query 9 
+-- Query 9 Total Shipping Cost and Average Shipping Time
+-- SELECT delivery method, total shipping cost and average shipping time (in days)
+-- Order the results by average shipping time, in descending order
 
--- Query: Shopping Cart Details
--- SELECT customer name, cart creation date, product name, quantity of each product, and total value of each product
--- FROM customer, shopping_cart, cart_item, and product tables
--- ORDER BY cart creation date in descending order
-
-SELECT 
-    c.first_name + ' ' + c.last_name AS customer_name,
-    sc.created_at AS cart_creation_date,
-    p.title AS product_name,
-    ci.quantity AS quantity_in_cart,
-    (ci.quantity * p.price) AS total_product_value
-FROM 
-    customer c
-JOIN 
-    shopping_cart sc ON c.customer_id = sc.customer_id
-JOIN 
-    cart_item ci ON sc.cart_id = ci.cart_id
-JOIN 
-    product p ON ci.product_id = p.product_id
-ORDER BY 
-    sc.created_at DESC;
+SELECT		dbo.v_order_shipment.delivery_method,
+			SUM(dbo.v_order_shipment.shipping_cost) AS total_shipping_cost,
+			ISNULL(AVG(DATEDIFF(day, dbo.v_order_shipment.shipping_date, dbo.v_order_shipment.arrival_date)), 0) AS average_shipping_days
+FROM		dbo.v_order_shipment				
+GROUP BY	dbo.v_order_shipment.delivery_method
+ORDER BY	average_shipping_days DESC;
 
 
 

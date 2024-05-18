@@ -286,15 +286,15 @@ VALUES ('Delivery', 'Delivers in 3-5 business days.', 1),
 
 INSERT INTO [order]
 VALUES (1, 1, 1598.00, 'Unpaid', '2024-05-1 22:06:20.160', GETDATE()),
-	   (2, 2, 699.00, 'Processing', '2024-05-2 22:06:20.160', GETDATE()),
+	   (2, 1, 699.00, 'Processing', '2024-05-2 22:06:20.160', GETDATE()),
 	   (3, 1, 2997.00, 'Out for Delivery', '2024-05-3 22:06:20.160', GETDATE()),
 	   (4, 1, 1099.00, 'Delivered', '2024-05-4 22:06:20.160', GETDATE()),
-	   (5, 2, 799.00, 'Delivered', '2024-05-5 22:06:20.160', GETDATE()),
+	   (5, 1, 799.00, 'Delivered', '2024-05-5 22:06:20.160', GETDATE()),
 	   (6, 1, 1500.00, 'Cancelled', '2024-05-6 22:06:20.160', GETDATE()),
 	   (7, 1, 798.00, 'Processing', '2024-05-7 22:06:20.160', GETDATE()),
 	   (8, 1, 499.00, 'Unpaid', GETDATE(), GETDATE()),
 	   (9, 2, 598.00, 'Delivered', GETDATE(), GETDATE()),
-	   (10, 1, 449.00, 'Out for Delivery', GETDATE(), GETDATE()),
+	   (10, 2, 449.00, 'Out for Delivery', GETDATE(), GETDATE()),
 	   (1, 1, 1398.00, 'Delivered', GETDATE(), GETDATE());
 
 
