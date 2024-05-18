@@ -42,5 +42,30 @@ WHERE dbo.[order].order_status = 'Processing'
 ORDER BY customer_id;
 
 -- Query 6 [Medium] (A.Dung)
+SELECT  dbo.[order].order_id,
+        dbo.[order].created_at,
+        dbo.shipment.shipping_date,
+        CONCAT(dbo.shipper.first_name, ' ', dbo.shipper.last_name) AS shipper_name
+FROM [order]
+JOIN shipment ON dbo.[order].order_id = dbo.shipment.order_id
+JOIN shipper ON dbo.shipment.shipper_id = dbo.shipper.shipper_id
+ORDER BY dbo.[order].created_at DESC;
 
 -- Query 8 [High] (A.Dung)
+-- Get a list of tables and views in the current database
+SELECT *
+FROM dbo.product_list;
+GO
+
+SELECT
+    dbo.category_name,
+    COUNT(product_id) AS total_products,
+    SUM(price * quantity) AS total_stock_value,
+    SUM(CASE WHEN status = 'In stock' THEN quantity ELSE 0 END) AS total_quantity_in_stock,
+    SUM(CASE WHEN status = 'In stock' THEN price * quantity ELSE 0 END) AS total_value_in_stock
+FROM
+    dbo..product_list
+GROUP BY
+    category_name
+ORDER BY
+    total_value_in_stock DESC;
