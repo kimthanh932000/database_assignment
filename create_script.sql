@@ -123,7 +123,7 @@ CREATE TABLE [order]
 	customer_id INT NOT NULL,
 	delivery_type INT NOT NULL,
 	total_price DECIMAL(10, 2) NOT NULL,
-	order_status VARCHAR(20) NOT NULL CHECK (order_status IN ('Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Failed Delivery', 'Cancelled')),
+	order_status VARCHAR(20) NOT NULL CHECK (order_status IN ('Unpaid', 'Processing', 'Out for Delivery', 'Delivered', 'Cancelled')),
 	created_at DATETIME NOT NULL DEFAULT GETDATE(),
 	updated_at DATETIME NOT NULL DEFAULT GETDATE(),
 	CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
@@ -285,14 +285,14 @@ VALUES ('Delivery', 'Delivers in 3-5 business days.', 1),
 
 
 INSERT INTO [order]
-VALUES (1, 1, 1598.00, 'Processing', '2024-05-1 22:06:20.160', GETDATE()),
-	   (2, 2, 699.00, 'Pending', '2024-05-2 22:06:20.160', GETDATE()),
+VALUES (1, 1, 1598.00, 'Unpaid', '2024-05-1 22:06:20.160', GETDATE()),
+	   (2, 2, 699.00, 'Processing', '2024-05-2 22:06:20.160', GETDATE()),
 	   (3, 1, 2997.00, 'Out for Delivery', '2024-05-3 22:06:20.160', GETDATE()),
 	   (4, 1, 1099.00, 'Delivered', '2024-05-4 22:06:20.160', GETDATE()),
-	   (5, 2, 799.00, 'Failed Delivery', '2024-05-5 22:06:20.160', GETDATE()),
+	   (5, 2, 799.00, 'Delivered', '2024-05-5 22:06:20.160', GETDATE()),
 	   (6, 1, 1500.00, 'Cancelled', '2024-05-6 22:06:20.160', GETDATE()),
 	   (7, 1, 798.00, 'Processing', '2024-05-7 22:06:20.160', GETDATE()),
-	   (8, 1, 499.00, 'Pending', GETDATE(), GETDATE()),
+	   (8, 1, 499.00, 'Unpaid', GETDATE(), GETDATE()),
 	   (9, 2, 598.00, 'Delivered', GETDATE(), GETDATE()),
 	   (10, 1, 449.00, 'Out for Delivery', GETDATE(), GETDATE()),
 	   (1, 1, 1398.00, 'Delivered', GETDATE(), GETDATE());
@@ -315,16 +315,16 @@ VALUES (1, 1, 2, 1598.00),   -- 2 units of product ID 1 for order ID 1
 
 INSERT INTO payment (order_id, transaction_id, amount, payment_status, payment_date) 
 VALUES (1, '6ee6c3f95c2f527de1b1f8d33d2515f1', 1598.00, 'Failed', GETDATE()),
-	  (2, '16ec0e8ca8d8beb2ed27d726ecdf5dc2', 699.00, 'Failed', GETDATE()),
-	  (3, '2c3d76b06bed7b527fcd02f6800c262e', 2997.00, 'Successfull', GETDATE()),
-	  (4, '34c3fbb726efa01e9b8b9b0cb16df33e', 1099.00, 'Successfull', GETDATE()),
-	  (5, 'e9800998ecf8427e21d0d767cff771d1', 799.00, 'Successfull', GETDATE()),
-	  (6, '2f1ed4672ba948e93f104c72c9dab292', 1500.00, 'Failed', GETDATE()),
-	  (7, 'f5a3f9d00f1d6dd4e47bde1b2c7f3d0f', 798.00, 'Successfull', GETDATE()),
-	  (8, 'bc9189406be84ec297464a514221406d', 499.00, 'Failed', GETDATE()),
-	  (9, '9e107d9d372bb6826bd81d3542a419d6', 598.00, 'Successfull', GETDATE()),
-	  (10, '4e07408562bedb8b60ce05c1decfe3ad', 449.00, 'Failed', GETDATE()),
-	  (11, '52sa408562hd3b8b60ce05c1de3ss2ad', 1398.00, 'Failed', GETDATE());
+	   (2, '16ec0e8ca8d8beb2ed27d726ecdf5dc2', 699.00, 'Successfull', GETDATE()),
+	   (3, '2c3d76b06bed7b527fcd02f6800c262e', 2997.00, 'Successfull', GETDATE()),
+	   (4, '34c3fbb726efa01e9b8b9b0cb16df33e', 1099.00, 'Successfull', GETDATE()),
+	   (5, 'e9800998ecf8427e21d0d767cff771d1', 799.00, 'Successfull', GETDATE()),
+	   (6, '2f1ed4672ba948e93f104c72c9dab292', 1500.00, 'Successfull', GETDATE()),
+	   (7, 'f5a3f9d00f1d6dd4e47bde1b2c7f3d0f', 798.00, 'Successfull', GETDATE()),
+	   (8, 'bc9189406be84ec297464a514221406d', 499.00, 'Failed', GETDATE()),
+	   (9, '9e107d9d372bb6826bd81d3542a419d6', 598.00, 'Successfull', GETDATE()),
+	   (10, '4e07408562bedb8b60ce05c1decfe3ad', 449.00, 'Successfull', GETDATE()),
+	   (11, '52sa408562hd3b8b60ce05c1de3ss2ad', 1398.00, 'Successfull', GETDATE());
 
 
 INSERT INTO shipper (first_name, last_name, phone, [address], is_available) 
