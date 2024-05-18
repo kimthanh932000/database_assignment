@@ -35,18 +35,15 @@ ORDER BY	dbo.[order].created_at DESC;
 
 
 
--- Query 6 [Medium] (A.Dung)
-
-
-
--- Query 7 Customers Order Stats (Vi)
--- SELECT customer ID, full name (by concatenating their first name and last name), email, number of orders, total price of these orders for each customer
+-- Query 6 Customers Order Stats (Vi)
+-- SELECT customer ID, full name (by concatenating their first name and last name), email, number of orders, total price and average order value of these orders for each customer
 -- Order the results by total revenue, in descending order
 
 SELECT		dbo.customer.customer_id,
 			CONCAT(dbo.customer.first_name, ' ', dbo.customer.last_name) as full_name,
 			COUNT(dbo.[order].order_id) AS total_orders,
-			SUM(dbo.[order].total_price) AS total_price
+			SUM(dbo.[order].total_price) AS total_price,
+			AVG(CAST(dbo.[order].total_price AS FLOAT(1))) AS average_order_value
 FROM		dbo.customer INNER JOIN
 				dbo.[order] ON dbo.customer.customer_id = dbo.[order].customer_id
 GROUP BY	dbo.customer.customer_id, CONCAT(dbo.customer.first_name, ' ', dbo.customer.last_name), dbo.[order].customer_id
