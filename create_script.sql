@@ -222,15 +222,15 @@ INSERT INTO product
 VALUES (1, 'iPhone 13', 'Latest model of Apple iPhone with improved camera and battery life.', 799.00, 'Apple', 150, 1),
 	   (1, 'Samsung Galaxy S21', 'High-end smartphone with Android operating system and advanced photography capabilities.', 699.00, 'Samsung', 200, 1),
 	   (2, 'Dell XPS 13', 'Compact and powerful ultrabook from Dell, known for its sleek design and performance.', 999.00, 'Dell', 100, 1),
-	   (2, 'MacBook Air', 'Light and durable Apple laptop, ideal for professionals and students.', 1099.00, 'Apple', 120, 1),
+	   (2, 'MacBook Air', 'Light and durable Apple laptop, ideal for professionals and students.', 1099.00, 'Apple', 7, 1),
 	   (3, 'iPad Pro', 'High-performance tablet with liquid retina display, suitable for professionals and artists.', 799.00, 'Apple', 80, 1),
 	   (4, 'Alienware Aurora', 'High-end gaming desktop with customizable RGB lighting and powerful components.', 1500.00, 'Alienware', 50, 1),
 	   (5, 'Apple Watch Series 6', 'Latest generation smartwatch with health monitoring features and integration with iOS.', 399.00, 'Apple', 180, 1),
 	   (6, 'PlayStation 5', 'The latest home video game console from Sony with advanced graphics and performance.', 499.00, 'Sony', 200, 1),
-	   (7, 'Bose QuietComfort', 'Noise-cancelling headphones that provide an unparalleled audio experience.', 299.00, 'Bose', 300, 1),
+	   (7, 'Bose QuietComfort', 'Noise-cancelling headphones that provide an unparalleled audio experience.', 299.00, 'Bose', 9, 1),
 	   (8, 'Nikon D3500', 'Entry-level DSLR camera with great image quality and easy to use for beginners.', 449.99, 'Nikon', 90, 1),
 	   (9, 'DJI Mavic Air 2', 'Compact drone with 4K video capability and 34-minute flight time.', 799.99, 'DJI', 60, 1),
-	   (10, 'Samsung Smart Fridge', 'Refrigerator with Wi-Fi connectivity and a touch screen for managing groceries and household tasks.', 1200.00, 'Samsung', 40, 1);
+	   (10, 'Samsung Smart Fridge', 'Refrigerator with Wi-Fi connectivity and a touch screen for managing groceries and household tasks.', 1200.00, 'Samsung', 5, 1);
 
 
 INSERT INTO customer
