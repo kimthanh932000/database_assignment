@@ -1,25 +1,25 @@
 
 --******Create/Drop Databse******
 
--- if Ecommerce exists, kill current connections to Database
+-- if XYZElectronics exists, kill current connections to Database
 -- make single user
-IF DB_ID('ecommerce') IS NOT NULL
+IF DB_ID('XYZElectronics') IS NOT NULL
 	BEGIN
 		USE [MASTER];
 
-		ALTER	DATABASE ecommerce 
+		ALTER	DATABASE XYZElectronics 
 		SET 	SINGLE_USER
 		WITH	ROLLBACK IMMEDIATE;
 
-		DROP DATABASE ecommerce;
+		DROP DATABASE XYZElectronics;
 	END
 GO
 
--- create new database called ecommerce
-CREATE DATABASE ecommerce;
+-- create new database called "XYZElectronics"
+CREATE DATABASE XYZElectronics;
 GO
 
-USE ecommerce;
+USE XYZElectronics;
 GO
 
 --******Create Tables*******

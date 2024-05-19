@@ -1,4 +1,4 @@
-USE ecommerce;
+USE XYZElectronics;
 
 -- Query 1 Total Orders Per Month
 -- SELECT the year, month and total number of orders placed each month
@@ -41,7 +41,7 @@ ORDER BY	dbo.[order].created_at;
 
 SELECT		dbo.v_product_list.product_name,
 			dbo.v_product_list.product_description, 
-			dbo.v_product_list.price AS unit_price,
+			dbo.v_product_list.unit_price,
 			dbo.v_product_list.status,
 			dbo.v_product_list.category_name
 FROM		dbo.v_product_list

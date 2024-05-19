@@ -1,4 +1,4 @@
-USE ecommerce;
+USE XYZElectronics;
 GO
 
 -- Products View
