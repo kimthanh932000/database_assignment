@@ -1,4 +1,5 @@
 -- Query 1 [Low] (A.Dung)
+-- Select product and order items, 
 SELECT  dbo.product.title, 
         dbo.product.[description], 
         dbo.product.price, 
@@ -51,21 +52,21 @@ JOIN shipment ON dbo.[order].order_id = dbo.shipment.order_id
 JOIN shipper ON dbo.shipment.shipper_id = dbo.shipper.shipper_id
 ORDER BY dbo.[order].created_at DESC;
 
--- Query 8 [High] (A.Dung)
--- Get a list of tables and views in the current database
-SELECT *
-FROM dbo.product_list;
-GO
+-- -- Query 8 [High] (A.Dung)
+-- -- Get a list of tables and views in the current database
+-- SELECT *
+-- FROM dbo.product_list;
+-- GO
 
-SELECT
-    dbo.category_name,
-    COUNT(product_id) AS total_products,
-    SUM(price * quantity) AS total_stock_value,
-    SUM(CASE WHEN status = 'In stock' THEN quantity ELSE 0 END) AS total_quantity_in_stock,
-    SUM(CASE WHEN status = 'In stock' THEN price * quantity ELSE 0 END) AS total_value_in_stock
-FROM
-    dbo..product_list
-GROUP BY
-    category_name
-ORDER BY
-    total_value_in_stock DESC;
+-- SELECT
+--     dbo.category_name,
+--     COUNT(product_id) AS total_products,
+--     SUM(price * quantity) AS total_stock_value,
+--     SUM(CASE WHEN status = 'In stock' THEN quantity ELSE 0 END) AS total_quantity_in_stock,
+--     SUM(CASE WHEN status = 'In stock' THEN price * quantity ELSE 0 END) AS total_value_in_stock
+-- FROM
+--     dbo..product_list
+-- GROUP BY
+--     category_name
+-- ORDER BY
+--     total_value_in_stock DESC;
