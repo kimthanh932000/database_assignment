@@ -27,11 +27,11 @@ GO
 
 
 
--- Customer's Cart View 
--- Create a view that selects the following details from 3 tables "customer", "cart_item" and "product":
---		The customer ID, full name and email.
---		The cart item quantity and subtotal.
---		The product ID and product name.
+-- Order Shipping View 
+-- Create a view that selects the following details from 3 tables "order", "shipment" and "delivery_type":
+--		The order ID.
+--		The shipping cost, shipping date and arrival date.
+--		The delivery method.
 
 DROP VIEW IF EXISTS v_order_shipment
 GO
